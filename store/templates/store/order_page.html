@@ -1,0 +1,87 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+    <div class="container px-4 px-lg-0">
+        <div>
+            <a class="btn btn-light my-3" href="{% url 'user_profile' %}">
+                <i class="fas fa-arrow-left"></i> BACK TO USER PROFILE
+            </a>
+        </div>
+        <h1>Order:</h1>
+        <div class="row mt-3">
+            <div class="col-md-7">
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item">
+                        <h2 class="mb-3">Shipping</h2>
+                        {% for info in shipping %}
+                            <p><strong>Name:</strong> {{ info.customer.name }}</p>
+                            <p><strong>Email:</strong> {{ info.customer.email }}</p>
+                            <p><strong>Phone:</strong> {{ info.customer.phone }}</p>
+                            <p>
+                                <strong>Shipping:</strong> {{ info.address }}, {{ info.city }}, {{ info.postal_code }}, {{ info.country }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                    <div class="list-group-item">
+                        <h2 class="mb-3">Order Items</h2>
+                        {% for item in items %}
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <img class="row-image" src="{{ item.product.imageURL }}" alt="">
+                                </div>
+                                <div class="col-md-4">
+                                    <a href="{% url 'product_detail' item.product.slug %}">{{ item.product.name }}</a>
+                                </div>
+                                <div class="col-md-2">
+                                    <p class="mt-2">${{ item.product.price|floatformat:2 }}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="mt-2">
+                                        {{ item.quantity }} X ${{ item.product.price|floatformat:2 }}
+                                        = {{ item.get_total }}
+                                    </p>
+                                </div>
+                            </div>
+                            <hr>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="list-group list-group-flush">
+                        <div class="d-flex justify-content-center pt-3">
+                            <h2>ORDER SUMMARY</h2>
+                        </div>
+                        <hr>
+                        <div class="list-group-item">
+                            <div class="row">
+                                <div class="col">Items: </div>
+                                <div class="col">{{ order.get_cart_items }}</div>
+                            </div>
+                        </div>
+                        <div class="list-group-item">
+                            <div class="row">
+                                <div class="col">Shipping:</div>
+                                <div class="col">$0</div>
+                            </div>
+                        </div>
+                        <div class="list-group-item">
+                            <div class="row">
+                                <div class="col">Tax:</div>
+                                <div class="col">$0</div>
+                            </div>
+                        </div>
+                        <div class="list-group-item">
+                            <div class="row">
+                                <div class="col">Total: </div>
+                                <div class="col">{{ order.get_cart_total }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

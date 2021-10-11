@@ -1,0 +1,101 @@
+<div id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+     class="modal fade text-left">
+    <div role="document" class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header justify-content-between">
+                <div class="tabs active" id="tab01">
+                    <h6 class="text-muted">Login</h6>
+                </div>
+                <div class="tabs " id="tab02">
+                    <h6 class="font-weight-bold">Register</h6>
+                </div>
+                <div style="margin: 2px 5px 0px 5px; padding-bottom: 10px;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+            <div class="line"></div>
+            <div class="modal-body p-0">
+                <div style="margin-left: 4px; margin-right: 4px">
+                    <fieldset class="show" id="tab011">
+                        <div class="bg-light">
+                            <h5 class="text-center mb-4 mt-0 pt-4">Login</h5>
+                            <form action="" method="POST">
+                                {% csrf_token %}
+                                <div class="input-group mb-3">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    </div>
+                                    {{ form_login.username }}
+                                </div>
+                                <div class="input-group mb-4">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fas fa-key"></i></span>
+                                    </div>
+                                    {{ form_login.password }}
+                                </div>
+                                <input class="btn btn-dark btn-block" name="login" type="submit" value="Login"/>
+                            </form>
+                        </div>
+                    </fieldset>
+                </div>
+                <div style="margin-left: 4px; margin-right: 4px">
+                    <fieldset id="tab021">
+                        <div class="bg-light">
+                            <h5 class="text-center mb-4 mt-0 pt-4">Register</h5>
+                            <form action="" method="POST">
+                                {% csrf_token %}
+                                <div class="input-group mb-3">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    </div>
+                                    {{ form_register.username }}
+                                </div>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    </div>
+                                    {{ form_register.first_name }}
+                                </div>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    </div>
+                                    {{ form_register.last_name }}
+                                </div>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                    </div>
+                                    {{ form_register.email }}
+                                </div>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                    </div>
+                                    {{ form_register.phone }}
+                                </div>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fas fa-key"></i></span>
+                                    </div>
+                                    {{ form_register.password1 }}
+                                </div>
+                                <div class="input-group mb-4">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fas fa-key"></i></span>
+                                    </div>
+                                    {{ form_register.password2 }}
+                                </div>
+                                <input class="btn btn-dark btn-block" type="submit" name="register"
+                                       value="Register"/>
+                            </form>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="modal-footer d-flex flex-column justify-content-center border-0"></div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+<div class="d-flex justify-content-center">
+    {% if products.has_other_pages %}
+        <ul class="pagination">
+            {% if products.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ products.previous_page_number }}" tabindex="-1">&laquo;</a>
+                </li>
+            {% endif %}
+            {% for page in products.paginator.page_range %}
+                {% if products.number == page %}
+                    <li class="page-item active">
+                        <a class="page-link" href="#">{{ page }}</a>
+                    </li>
+                    {#                {% elif page > page_obj.number|add:-3 and page < page_obj.number|add:3 %}#}
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            {% if products.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ products.next_page_number }}">&raquo;</a>
+                </li>
+            {% endif %}
+        </ul>
+    {% endif %}
+</div>

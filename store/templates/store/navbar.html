@@ -1,0 +1,50 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <a class="navbar-brand" href="{% url 'store' %}">ECOMMERCE</a>
+            <li class="nav-item dropdown px-2">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    CATEGORIES
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    {% for category in categories %}
+                        <a href="{% url 'category' category.id %}" class="dropdown-item">
+                            {{ category|upper }} {{ category.products }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </li>
+            <li>
+                <form action="/" method="GET" style="display: flex;" class="form-inline my-2 my-lg-0">
+                    <input name='search-area' class="form-control mr-sm-2" type="search" placeholder="Search"
+                           aria-label="Search"
+                           value="{{ search_input }}">
+                    <button class="btn btn-dark my-2 my-sm-0" type="submit">SEARCH</button>
+                </form>
+            </li>
+        </ul>
+        {% if request.user.is_authenticated %}
+            <li style="list-style-type: none;" class="nav-item dropdown">
+                <a href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    <div class="loginBtn"><i class="fas fa-user"></i> {{ user.customer }}</div>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <div><a class="dropdown-item" href="{% url 'user_profile' %}">Profile</a></div>
+                    <div><a class="dropdown-item" href="{% url 'logout' %}">Log out</a></div>
+                </div>
+            </li>
+        {% else %}
+            <div class="loginBtn" data-toggle="modal" data-target="#myModal"><i class="fas fa-user"></i> Login</div>
+        {% endif %}
+        <div class="form-inline my-2 my-lg-0">
+            <a href="{% url 'cart' %}">
+                <img alt="" id="cart-icon" src="{% static 'images/cart.png' %}">
+            </a>
+            <p id="cart-total">{{ cart_items }}</p>
+        </div>
+    </div>
+</nav>
+

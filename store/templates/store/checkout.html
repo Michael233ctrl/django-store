@@ -1,0 +1,184 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+    <div class="container px-4 px-lg-0">
+        <div>
+            <a class="btn btn-light my-3" href="{% url 'cart' %}">
+                <i class="fas fa-arrow-left"></i> BACK TO CART
+            </a>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item">
+                        <form id="form">
+                            <div id="user-info">
+                                <h2>Customer Information</h2>
+                                <div class="form-group">
+                                    <label class="form-label" for="name">Name</label>
+                                    <input required class="form-control" type="text" name="name"
+                                           placeholder="Enter name">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="name">Last name</label>
+                                    <input required class="form-control" type="text" name="last_name"
+                                           placeholder="Enter last name">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="name">Email</label>
+                                    <input required class="form-control" type="text" name="email"
+                                           placeholder="Enter email">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="name">Phone</label>
+                                    <input required class="form-control" type="text" name="phone"
+                                           placeholder="Enter phone">
+                                </div>
+                                <hr>
+                            </div>
+                            <div id="shipping-info">
+                                <h2>Shipping Information</h2>
+                                <div class="form-group">
+                                    <label class="form-label" for="name">Address</label>
+                                    <input required class="form-control" type="text" name="address"
+                                           placeholder="Enter address">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="name">City</label>
+                                    <input required class="form-control" type="text" name="city"
+                                           placeholder="Enter city">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="name">Postal Code</label>
+                                    <input required class="form-control" type="text" name="postal_code"
+                                           placeholder="Enter postal code">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="name">Country</label>
+                                    <input required class="form-control" type="text" name="country"
+                                           placeholder="Enter country">
+                                </div>
+                            </div>
+                            <input id="form-button" class="btn btn-dark btn-block" type="submit" value="Continue">
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="list-group list-group-flush">
+                        <div class="d-flex justify-content-center pt-3">
+                            <h2>ORDER SUMMARY</h2>
+                        </div>
+                        <hr>
+                        {% for item in items %}
+                            <div class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <img class="row-image" src="{{ item.product.imageURL }}" alt="">
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{ item.product.name }}
+                                    </div>
+                                    <div class="col-md-2">
+                                        <p class="mt-2">${{ item.product.price|floatformat:2 }}</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="mt-2">
+                                            {{ item.quantity }} X ${{ item.product.price|floatformat:2 }}
+                                            = {{ item.get_total }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <div class="list-group-item pt-3">
+                            <h4>Items: {{ order.get_cart_items }}</h4>
+                            <h4>Total: {{ order.get_cart_total|floatformat:2 }}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 hidden" id="payment-info">
+                    <small>Paypal Options</small>
+                    <div class="d-flex justify-content-center mt-2">
+                        {% if order.get_cart_items %}
+                            <button class="btn-block btn btn-dark" id="make-payment">Make Payment</button>
+                        {% else %}
+                            <button disabled class="btn-block btn btn-dark" id="make-payment">Make Payment</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let total = '{{ order.get_cart_total }}'
+
+        if (user !== 'AnonymousUser') {
+            document.getElementById('user-info').innerHTML = ''
+        }
+
+        let form = document.getElementById('form')
+
+        form.addEventListener('submit', e => {
+            e.preventDefault()
+            console.log('Form submitted...')
+            document.getElementById('form-button').classList.add('disabled')
+            document.getElementById('payment-info').classList.remove('hidden')
+        })
+
+        document.getElementById('make-payment').addEventListener('click', e => {
+            submitFormData()
+        })
+        let submitFormData = () => {
+            console.log('Payment button clicked')
+
+            let userFormData = {
+                'name': null,
+                'last_name': null,
+                'email': null,
+                'phone': null,
+                'total': total,
+            }
+
+            let shippingInfo = {
+                'address': null,
+                'city': null,
+                'postal_code': null,
+                'country': null,
+            }
+            shippingInfo.address = form.address.value
+            shippingInfo.city = form.city.value
+            shippingInfo.postal_code = form.postal_code.value
+            shippingInfo.country = form.country.value
+
+            if (user === 'AnonymousUser') {
+                userFormData.name = form.name.value
+                userFormData.last_name = form.last_name.value
+                userFormData.email = form.email.value
+                userFormData.phone = form.phone.value
+            }
+
+            const url = '/process_order/'
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify({'form': userFormData, 'shipping': shippingInfo})
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log('Success:', data)
+                    alert('Transaction completed')
+
+                    cart = {}
+                    document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
+
+                    window.location.href = "{% url 'store' %}"
+                })
+        }
+    </script>
+{% endblock content %}
