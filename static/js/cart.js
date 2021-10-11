@@ -65,37 +65,24 @@ function addCookieItem(productId, action, countInStock) {
 function updateUserOrder(productId, action) {
     const url = '/update_item/'
 
-    if (action === 'addByQty') {
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken,
-            },
-            body: JSON.stringify({'productId': productId, 'action': action, 'qty': form.value})
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,
+        },
+        body: JSON.stringify(
+            action === 'addByQty'
+            ? {'productId': productId, 'action': action, 'qty': form.value}
+            : {'productId': productId, 'action': action}
+        )
+    })
+        .then((response) => {
+            return response.json();
         })
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                console.log('data:', data);
-                window.location.href = "/cart/"
-            })
-    } else {
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken,
-            },
-            body: JSON.stringify({'productId': productId, 'action': action})
+        .then((data) => {
+            console.log('data:', data);
+            action === 'addByQty' ? window.location.href = "/cart/" : location.reload()
         })
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                console.log('data:', data);
-                location.reload()
-            })
-    }
+
 }
